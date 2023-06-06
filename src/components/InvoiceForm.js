@@ -235,10 +235,10 @@ const InvoiceForm = () => {
                                       discountAmmount={invoiceData.discountAmmount} total={invoiceData.total}/>
                         <Form.Group className="mb-3">
                             <Form.Label className="fw-bold">Currency:</Form.Label>
-                            <Form.Select onChange={event => onCurrencyChange({currency: event.target.value})}
+                            <Form.Select onChange={event => onCurrencyChange(event)}
                                          className="btn btn-light my-1" aria-label="Change Currency">
                                 <option value="$">USD (United States Dollar)</option>
-                                <option value="£">GBP (British Pound Sterling)</option>
+                                <option value="₹">INR (Indian National Rupee)</option>
                                 <option value="¥">JPY (Japanese Yen)</option>
                                 <option value="$">CAD (Canadian Dollar)</option>
                                 <option value="$">AUD (Australian Dollar)</option>
