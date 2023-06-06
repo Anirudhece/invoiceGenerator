@@ -42,7 +42,9 @@ const InvoiceForm = () => {
 
     useEffect(() => {
         handleCalculateTotal();
-    }, []);
+    }, [invoiceData.items,
+        invoiceData.taxRate,
+        invoiceData.discountRate,]);
 
     const handleRowDel = (item) => {
         const updatedItems = invoiceData.items.filter((i) => i.id !== item.id);
@@ -81,8 +83,8 @@ const InvoiceForm = () => {
         });
     };
 
-    const onItemizedItemEdit = (event) => {
-        const {id, name, value} = event.target;
+    const onItemizedItemEdit = (event,id) => {
+        const { name, value} = event.target;
         const updatedItems = invoiceData.items.map((item) => {
             if (item.id === id) {
                 return {...item, [name]: value};
@@ -90,14 +92,14 @@ const InvoiceForm = () => {
             return item;
         });
 
-        setInvoiceData({...invoiceData, items: updatedItems});
         handleCalculateTotal();
+        setInvoiceData({...invoiceData, items: updatedItems});
     };
 
     const editField = (event) => {
         const {name, value} = event.target;
-        setInvoiceData({...invoiceData, [name]: value});
         handleCalculateTotal();
+        setInvoiceData({...invoiceData, [name]: value});
     };
 
     const onCurrencyChange = (event) => {

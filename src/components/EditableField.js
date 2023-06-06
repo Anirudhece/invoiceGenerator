@@ -29,7 +29,7 @@ const EditableField = (props) => {
                 step={cellData.step}
                 precision={cellData.precision}
                 aria-label={cellData.name}
-                onChange={onItemizedItemEdit}
+                onChange={(ev) => onItemizedItemEdit(ev,cellData.id)}
                 required
             />
         </InputGroup>
