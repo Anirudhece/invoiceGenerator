@@ -9,7 +9,7 @@ import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch,useSelector} from 'react-redux';
-import { add,checkCurrency,editFieldReducer ,rowDeleteReducer} from '../store/slices/InvoiceSliceReducer';
+import { add,checkCurrency,editFieldReducer,rowAddReducer ,rowDeleteReducer,itemizedItemEditReducer} from '../store/slices/InvoiceSliceReducer';
 import { current } from '@reduxjs/toolkit';
 
 const InvoiceForm = () => {
@@ -65,6 +65,8 @@ const InvoiceForm = () => {
             quantity: 1
         };
         setInvoiceData({...invoiceGlobalState, items: [...invoiceGlobalState.items, newItem]});
+        
+        dispatch(rowAddReducer({items: [...invoiceGlobalState.items, newItem]}))
     };
 
     const handleCalculateTotal = () => {
@@ -98,12 +100,16 @@ const InvoiceForm = () => {
 
         handleCalculateTotal();
         setInvoiceData({...invoiceGlobalState, items: updatedItems});
+
+        dispatch(itemizedItemEditReducer({
+            updatedItems
+        }))
     }
 
     const handleRowDel = (item) => {
         const updatedItems = invoiceGlobalState.items.filter((i) => i.id !== item.id);
         setInvoiceData({...invoiceGlobalState, items: updatedItems});
-        // dispatch(rowDeleteReducer({updatedItems}))
+        dispatch(rowDeleteReducer({updatedItems}))
     };
 
     const editField = (event) => {
@@ -197,10 +203,13 @@ const InvoiceForm = () => {
                                               onChange={(event) => editField(event)} required={true}/>
                             </Col>
                         </Row>
-                        <InvoiceItem onItemizedItemEdit={onItemizedItemEdit}
-                                     onRowAdd={handleAddEvent} onRowDel={handleRowDel}
-                                     currency={invoiceGlobalState.currency}
-                                      items={invoiceData.items}/>
+                        <InvoiceItem 
+                              onItemizedItemEdit={onItemizedItemEdit}
+                              onRowAdd={handleAddEvent} 
+                              onRowDel={handleRowDel}
+                              currency={invoiceGlobalState.currency}
+                              items={invoiceGlobalState.items}
+                        />
                         <Row className="mt-4 justify-content-end">
                             <Col lg={6}>
                                 <div className="d-flex flex-row align-items-start justify-content-between">

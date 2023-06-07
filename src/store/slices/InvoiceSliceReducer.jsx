@@ -49,16 +49,24 @@ const InvoiceSlice = createSlice({
 
         },
 
-        // rowDeleteReducer:(state,action)=>{
-        //     const updatedItems=action.payload;
-        //     state['items']=updatedItems;
+        
+        itemizedItemEditReducer:(state,action)=>{
+            const {updatedItems}=action.payload;
+            state['items']=updatedItems;
             
-        // },
-
+        },
+        rowAddReducer:(state,action)=>{
+            const {items} = action.payload;
+            state['items']=items;
+        },
+        rowDeleteReducer:(state,action)=>{
+            const {updatedItems}=action.payload;
+            state['items']=updatedItems;
+        },
 
 
 
     }
 })
-export const { add,checkCurrency,editFieldReducer ,rowDeleteReducer} = InvoiceSlice.actions;
+export const { add,checkCurrency,editFieldReducer ,rowDeleteReducer,itemizedItemEditReducer ,rowAddReducer} = InvoiceSlice.actions;
 export default InvoiceSlice.reducer;
