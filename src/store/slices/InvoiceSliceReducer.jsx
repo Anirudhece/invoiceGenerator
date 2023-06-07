@@ -35,9 +35,16 @@ const InvoiceSlice = createSlice({
     ,
     reducers: {
         add: (state, action) => {
-            state.items.push(action.payload);
+            // state.push()
+            const { key, value } = action.payload;
+            state[key] = value;
         },
+        checkCurrency: (state,action)=>{
+            const { key, value } = action.payload;
+            console.log(key,value,"hello");
+            state[key]= value;
+        }
     }
 })
-export const { add } = InvoiceSlice.actions;
+export const { add,checkCurrency } = InvoiceSlice.actions;
 export default InvoiceSlice.reducer;

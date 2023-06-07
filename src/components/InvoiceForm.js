@@ -8,8 +8,15 @@ import Card from 'react-bootstrap/Card';
 import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
+import { useDispatch,useSelector} from 'react-redux';
+import { add,checkCurrency } from '../store/slices/InvoiceSliceReducer';
+import { current } from '@reduxjs/toolkit';
 
 const InvoiceForm = () => {
+    const dispatch = useDispatch();
+    const invoiceGlobalState=useSelector((state) => state.InvoiceSlice);
+    // console.log(invoiceGlobalState);
+    
     const [invoiceData, setInvoiceData] = useState({
         isOpen: false,
         currency: '$',
@@ -79,7 +86,7 @@ const InvoiceForm = () => {
             subTotal: subTotal.toFixed(2),
             taxAmount,
             discountAmount,
-            total
+            total,
         });
     };
 
@@ -94,7 +101,7 @@ const InvoiceForm = () => {
 
         handleCalculateTotal();
         setInvoiceData({...invoiceData, items: updatedItems});
-    };
+    }
 
     const editField = (event) => {
         const {name, value} = event.target;
@@ -103,13 +110,18 @@ const InvoiceForm = () => {
     };
 
     const onCurrencyChange = (event) => {
-        setInvoiceData({...invoiceData, currency: event.target.value});
+        const {value} = event.target;
+        setInvoiceData({...invoiceData, currency:value});
+
+        dispatch(checkCurrency({key:'currency',value}));
+        console.log( 'reduxCurrency:' + invoiceGlobalState.currency);
     };
 
     const openModal = (event) => {
         event.preventDefault();
         handleCalculateTotal();
         setInvoiceData({...invoiceData, isOpen: true});
+        
     }
 
     const closeModal = () => {
@@ -128,9 +140,9 @@ const InvoiceForm = () => {
                 <Col md={8} lg={9}>
                     <Card className="p-4 p-xl-5 my-3 my-xl-4">
                         <div className="d-flex flex-row align-items-start justify-content-between mb-3">
-                            <div class="d-flex flex-column">
+                            <div className="d-flex flex-column">
                                 <div className="d-flex flex-column">
-                                    <div class="mb-2">
+                                    <div className="mb-2">
                                         <span className="fw-bold">Current&nbsp;Date:&nbsp;</span>
                                         <span className="current-date">{new Date().toLocaleDateString()}</span>
                                     </div>
@@ -184,20 +196,20 @@ const InvoiceForm = () => {
                         </Row>
                         <InvoiceItem onItemizedItemEdit={onItemizedItemEdit}
                                      onRowAdd={handleAddEvent} onRowDel={handleRowDel}
-                                     currency={invoiceData.currency} items={invoiceData.items}/>
+                                     currency={invoiceGlobalState.currency} items={invoiceData.items}/>
                         <Row className="mt-4 justify-content-end">
                             <Col lg={6}>
                                 <div className="d-flex flex-row align-items-start justify-content-between">
               <span className="fw-bold">Subtotal:
               </span>
-                                    <span>{invoiceData.currency}
+                                    <span>{invoiceGlobalState.currency}
                                         {invoiceData.subTotal}</span>
                                 </div>
                                 <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                                     <span className="fw-bold">Discount:</span>
                                     <span>
                 <span className="small ">({invoiceData.discountRate || 0}%)</span>
-                                        {invoiceData.currency}
+                                        {invoiceGlobalState.currency}
                                         {invoiceData.discountAmmount || 0}</span>
                                 </div>
                                 <div className="d-flex flex-row align-items-start justify-content-between mt-2">
@@ -205,7 +217,7 @@ const InvoiceForm = () => {
               </span>
                                     <span>
                 <span className="small ">({invoiceData.taxRate || 0}%)</span>
-                                        {invoiceData.currency}
+                                        {invoiceGlobalState.currency}
                                         {invoiceData.taxAmmount || 0}</span>
                                 </div>
                                 <hr/>
@@ -214,7 +226,7 @@ const InvoiceForm = () => {
                                 }}>
               <span className="fw-bold">Total:
               </span>
-                                    <span className="fw-bold">{invoiceData.currency}
+                                    <span className="fw-bold">{invoiceGlobalState.currency}
                                         {invoiceData.total || 0}</span>
                                 </div>
                             </Col>
@@ -230,7 +242,7 @@ const InvoiceForm = () => {
                     <div className="sticky-top pt-md-3 pt-xl-4">
                         <Button variant="primary" type="submit" className="d-block w-100">Review Invoice</Button>
                         <InvoiceModal showModal={invoiceData.isOpen} closeModal={closeModal} info={invoiceData}
-                                      items={invoiceData.items} currency={invoiceData.currency}
+                                      items={invoiceData.items} currency={invoiceGlobalState.currency}
                                       subTotal={invoiceData.subTotal} taxAmmount={invoiceData.taxAmmount}
                                       discountAmmount={invoiceData.discountAmmount} total={invoiceData.total}/>
                         <Form.Group className="mb-3">
