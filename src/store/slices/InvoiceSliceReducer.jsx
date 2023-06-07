@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const InvoiceSlice = createSlice({
     name: 'invoiceSlice',
-    // for now im not making initialState state as an array but i believe this state must be kept inside an array  
     initialState:
     {
         isOpen: false,
@@ -35,7 +34,6 @@ const InvoiceSlice = createSlice({
     ,
     reducers: {
         add: (state, action) => {
-            // state.push()
             const { key, value } = action.payload;
             state[key] = value;
         },
@@ -59,7 +57,7 @@ const InvoiceSlice = createSlice({
             const {items} = action.payload;
             state['items']=items;
         },
-        
+
         rowDeleteReducer:(state,action)=>{
             const {updatedItems}=action.payload;
             state['items']=updatedItems;
@@ -72,8 +70,12 @@ const InvoiceSlice = createSlice({
             state.discountAmount = discountAmount;
             state.total = total;
 
+        },
+
+        modalReducer:(state,action)=>{
+            state.isOpen = action.payload.isOpen;
         }
     }
 })
-export const { add,checkCurrency,editFieldReducer ,rowDeleteReducer,itemizedItemEditReducer ,rowAddReducer,calculateTotalReducer} = InvoiceSlice.actions;
+export const { add,checkCurrency,editFieldReducer ,rowDeleteReducer,itemizedItemEditReducer ,rowAddReducer,calculateTotalReducer,modalReducer} = InvoiceSlice.actions;
 export default InvoiceSlice.reducer;

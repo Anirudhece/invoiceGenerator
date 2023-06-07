@@ -9,13 +9,12 @@ import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch,useSelector} from 'react-redux';
-import { add,checkCurrency,editFieldReducer,rowAddReducer ,rowDeleteReducer,itemizedItemEditReducer,calculateTotalReducer} from '../store/slices/InvoiceSliceReducer';
+import {checkCurrency,editFieldReducer,rowAddReducer ,rowDeleteReducer,itemizedItemEditReducer,calculateTotalReducer,modalReducer} from '../store/slices/InvoiceSliceReducer';
 import { current } from '@reduxjs/toolkit';
 
 const InvoiceForm = () => {
     const dispatch = useDispatch();
     const invoiceGlobalState=useSelector((state) => state.InvoiceSlice);
-    // console.log(invoiceGlobalState);
     
     const [invoiceData, setInvoiceData] = useState({
         isOpen: false,
@@ -64,7 +63,7 @@ const InvoiceForm = () => {
             description: '',
             quantity: 1
         };
-        // setInvoiceData({...invoiceGlobalState, items: [...invoiceGlobalState.items, newItem]});
+    
         
         dispatch(rowAddReducer({items: [...invoiceGlobalState.items, newItem]}))
     };
@@ -80,13 +79,7 @@ const InvoiceForm = () => {
         const discountAmount = (subTotal * (discountRate / 100)).toFixed(2);
         const total = (subTotal - discountAmount + parseFloat(taxAmount)).toFixed(2);
 
-        // setInvoiceData({
-        //     ...invoiceData,
-        //     subTotal: subTotal.toFixed(2),
-        //     taxAmount,
-        //     discountAmount,
-        //     total,
-        // });
+
         dispatch(calculateTotalReducer({
             subTotal: subTotal.toFixed(2),
             taxAmount,
@@ -105,7 +98,6 @@ const InvoiceForm = () => {
         });
 
         handleCalculateTotal();
-        // setInvoiceData({...invoiceGlobalState, items: updatedItems});
 
         dispatch(itemizedItemEditReducer({
             updatedItems
@@ -114,20 +106,17 @@ const InvoiceForm = () => {
 
     const handleRowDel = (item) => {
         const updatedItems = invoiceGlobalState.items.filter((i) => i.id !== item.id);
-        // setInvoiceData({...invoiceGlobalState, items: updatedItems});
         dispatch(rowDeleteReducer({updatedItems}))
     };
 
     const editField = (event) => {
         const {name, value} = event.target;
         handleCalculateTotal();
-        // setInvoiceData({...invoiceGlobalState, [name]: value});
         dispatch(editFieldReducer({name,value}))
     };
 
     const onCurrencyChange = (event) => {
         const {value} = event.target;
-        // setInvoiceData({...invoiceGlobalState, currency:value});
 
         dispatch(checkCurrency({key:'currency',value}));
     };
@@ -135,19 +124,15 @@ const InvoiceForm = () => {
     const openModal = (event) => {
         event.preventDefault();
         handleCalculateTotal();
-        setInvoiceData({...invoiceGlobalState, isOpen: true});
+        dispatch(modalReducer({isOpen:true}));
+        
         
     }
 
     const closeModal = () => {
-        setInvoiceData({...invoiceGlobalState, isOpen: false});
+        dispatch(modalReducer({isOpen:false}));
     };
 
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     // Handle form submission logic here
-    //     // You can access the complete invoice data using the invoiceGlobalState object
-    // };
 
     return (
         <Form onSubmit={openModal}>
@@ -266,7 +251,7 @@ const InvoiceForm = () => {
                                       discountAmmount={invoiceGlobalState.discountAmmount} total={invoiceGlobalState.total}/>
                         <Form.Group className="mb-3">
                             <Form.Label className="fw-bold">Currency:</Form.Label>
-                            <Form.Select onChange={event => onCurrencyChange(event)} // redux implemented
+                            <Form.Select onChange={event => onCurrencyChange(event)} 
                                          className="btn btn-light my-1" aria-label="Change Currency">
                                 <option value="$">USD (United States Dollar)</option>
                                 <option value="₹">INR (Indian National Rupee)</option>
