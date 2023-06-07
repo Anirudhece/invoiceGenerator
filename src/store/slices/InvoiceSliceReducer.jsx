@@ -41,10 +41,24 @@ const InvoiceSlice = createSlice({
         },
         checkCurrency: (state,action)=>{
             const { key, value } = action.payload;
-            console.log(key,value,"hello");
             state[key]= value;
-        }
+        },
+        editFieldReducer:(state,action)=>{
+            const {name,value}=action.payload;
+            state[name]= value;
+
+        },
+
+        // rowDeleteReducer:(state,action)=>{
+        //     const updatedItems=action.payload;
+        //     state['items']=updatedItems;
+            
+        // },
+
+
+
+
     }
 })
-export const { add,checkCurrency } = InvoiceSlice.actions;
+export const { add,checkCurrency,editFieldReducer ,rowDeleteReducer} = InvoiceSlice.actions;
 export default InvoiceSlice.reducer;

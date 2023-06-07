@@ -9,7 +9,7 @@ import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch,useSelector} from 'react-redux';
-import { add,checkCurrency } from '../store/slices/InvoiceSliceReducer';
+import { add,checkCurrency,editFieldReducer ,rowDeleteReducer} from '../store/slices/InvoiceSliceReducer';
 import { current } from '@reduxjs/toolkit';
 
 const InvoiceForm = () => {
@@ -49,14 +49,11 @@ const InvoiceForm = () => {
 
     useEffect(() => {
         handleCalculateTotal();
-    }, [invoiceData.items,
-        invoiceData.taxRate,
-        invoiceData.discountRate,]);
+    }, [invoiceGlobalState.items,
+        invoiceGlobalState.taxRate,
+        invoiceGlobalState.discountRate,]);
 
-    const handleRowDel = (item) => {
-        const updatedItems = invoiceData.items.filter((i) => i.id !== item.id);
-        setInvoiceData({...invoiceData, items: updatedItems});
-    };
+
 
     const handleAddEvent = () => {
         const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
@@ -67,11 +64,11 @@ const InvoiceForm = () => {
             description: '',
             quantity: 1
         };
-        setInvoiceData({...invoiceData, items: [...invoiceData.items, newItem]});
+        setInvoiceData({...invoiceGlobalState, items: [...invoiceGlobalState.items, newItem]});
     };
 
     const handleCalculateTotal = () => {
-        const {items, taxRate, discountRate} = invoiceData;
+        const {items, taxRate, discountRate} = invoiceGlobalState;
         let subTotal = 0;
 
         items.forEach((item) => {
@@ -82,7 +79,7 @@ const InvoiceForm = () => {
         const total = (subTotal - discountAmount + parseFloat(taxAmount)).toFixed(2);
 
         setInvoiceData({
-            ...invoiceData,
+            ...invoiceGlobalState,
             subTotal: subTotal.toFixed(2),
             taxAmount,
             discountAmount,
@@ -92,7 +89,7 @@ const InvoiceForm = () => {
 
     const onItemizedItemEdit = (event,id) => {
         const { name, value} = event.target;
-        const updatedItems = invoiceData.items.map((item) => {
+        const updatedItems = invoiceGlobalState.items.map((item) => {
             if (item.id === id) {
                 return {...item, [name]: value};
             }
@@ -100,38 +97,44 @@ const InvoiceForm = () => {
         });
 
         handleCalculateTotal();
-        setInvoiceData({...invoiceData, items: updatedItems});
+        setInvoiceData({...invoiceGlobalState, items: updatedItems});
     }
+
+    const handleRowDel = (item) => {
+        const updatedItems = invoiceGlobalState.items.filter((i) => i.id !== item.id);
+        setInvoiceData({...invoiceGlobalState, items: updatedItems});
+        // dispatch(rowDeleteReducer({updatedItems}))
+    };
 
     const editField = (event) => {
         const {name, value} = event.target;
         handleCalculateTotal();
-        setInvoiceData({...invoiceData, [name]: value});
+        setInvoiceData({...invoiceGlobalState, [name]: value});
+        dispatch(editFieldReducer({name,value}))
     };
 
     const onCurrencyChange = (event) => {
         const {value} = event.target;
-        setInvoiceData({...invoiceData, currency:value});
+        setInvoiceData({...invoiceGlobalState, currency:value});
 
         dispatch(checkCurrency({key:'currency',value}));
-        console.log( 'reduxCurrency:' + invoiceGlobalState.currency);
     };
 
     const openModal = (event) => {
         event.preventDefault();
         handleCalculateTotal();
-        setInvoiceData({...invoiceData, isOpen: true});
+        setInvoiceData({...invoiceGlobalState, isOpen: true});
         
     }
 
     const closeModal = () => {
-        setInvoiceData({...invoiceData, isOpen: false});
+        setInvoiceData({...invoiceGlobalState, isOpen: false});
     };
 
     // const handleSubmit = (event) => {
     //     event.preventDefault();
     //     // Handle form submission logic here
-    //     // You can access the complete invoice data using the invoiceData object
+    //     // You can access the complete invoice data using the invoiceGlobalState object
     // };
 
     return (
@@ -149,7 +152,7 @@ const InvoiceForm = () => {
                                 </div>
                                 <div className="d-flex flex-row align-items-center">
                                     <span className="fw-bold d-block me-2">Due&nbsp;Date:</span>
-                                    <Form.Control type="date" value={invoiceData.dateOfIssue} name={"dateOfIssue"}
+                                    <Form.Control type="date" value={invoiceGlobalState.dateOfIssue} name={"dateOfIssue"}
                                                   onChange={(event) => editField(event)} style={{
                                         maxWidth: '150px'
                                     }} required={true}/>
@@ -157,7 +160,7 @@ const InvoiceForm = () => {
                             </div>
                             <div className="d-flex flex-row align-items-center">
                                 <span className="fw-bold me-2">Invoice&nbsp;Number:&nbsp;</span>
-                                <Form.Control type="number" value={invoiceData.invoiceNumber} name={"invoiceNumber"}
+                                <Form.Control type="number" value={invoiceGlobalState.invoiceNumber} name={"invoiceNumber"}
                                               onChange={(event) => editField(event)} min="1" style={{
                                     maxWidth: '70px'
                                 }} required={true}/>
@@ -167,58 +170,59 @@ const InvoiceForm = () => {
                         <Row className="mb-5">
                             <Col>
                                 <Form.Label className="fw-bold">Bill to:</Form.Label>
-                                <Form.Control placeholder={"Who is this invoice to?"} rows={3} value={invoiceData.billTo}
+                                <Form.Control placeholder={"Who is this invoice to?"} rows={3} value={invoiceGlobalState.billTo}
                                               type="text" name="billTo" className="my-2"
                                               onChange={(event) => editField(event)} autoComplete="name"
                                               required={true}/>
-                                <Form.Control placeholder={"Email address"} value={invoiceData.billToEmail} type="email"
+                                <Form.Control placeholder={"Email address"} value={invoiceGlobalState.billToEmail} type="email"
                                               name="billToEmail" className="my-2"
                                               onChange={(event) => editField(event)} autoComplete="email"
                                               required={true}/>
-                                <Form.Control placeholder={"Billing address"} value={invoiceData.billToAddress}
+                                <Form.Control placeholder={"Billing address"} value={invoiceGlobalState.billToAddress}
                                               type="text" name="billToAddress" className="my-2" autoComplete="address"
                                               onChange={(event) => editField(event)} required={true}/>
                             </Col>
                             <Col>
                                 <Form.Label className="fw-bold">Bill from:</Form.Label>
                                 <Form.Control placeholder={"Who is this invoice from?"} rows={3}
-                                              value={invoiceData.billFrom} type="text" name="billFrom" className="my-2"
+                                              value={invoiceGlobalState.billFrom} type="text" name="billFrom" className="my-2"
                                               onChange={(event) => editField(event)} autoComplete="name"
                                               required={true}/>
-                                <Form.Control placeholder={"Email address"} value={invoiceData.billFromEmail}
+                                <Form.Control placeholder={"Email address"} value={invoiceGlobalState.billFromEmail}
                                               type="email" name="billFromEmail" className="my-2"
                                               onChange={(event) => editField(event)} autoComplete="email"
                                               required={true}/>
-                                <Form.Control placeholder={"Billing address"} value={invoiceData.billFromAddress}
+                                <Form.Control placeholder={"Billing address"} value={invoiceGlobalState.billFromAddress}
                                               type="text" name="billFromAddress" className="my-2" autoComplete="address"
                                               onChange={(event) => editField(event)} required={true}/>
                             </Col>
                         </Row>
                         <InvoiceItem onItemizedItemEdit={onItemizedItemEdit}
                                      onRowAdd={handleAddEvent} onRowDel={handleRowDel}
-                                     currency={invoiceGlobalState.currency} items={invoiceData.items}/>
+                                     currency={invoiceGlobalState.currency}
+                                      items={invoiceData.items}/>
                         <Row className="mt-4 justify-content-end">
                             <Col lg={6}>
                                 <div className="d-flex flex-row align-items-start justify-content-between">
               <span className="fw-bold">Subtotal:
               </span>
                                     <span>{invoiceGlobalState.currency}
-                                        {invoiceData.subTotal}</span>
+                                        {invoiceGlobalState.subTotal}</span>
                                 </div>
                                 <div className="d-flex flex-row align-items-start justify-content-between mt-2">
                                     <span className="fw-bold">Discount:</span>
                                     <span>
-                <span className="small ">({invoiceData.discountRate || 0}%)</span>
+                <span className="small ">({invoiceGlobalState.discountRate || 0}%)</span>
                                         {invoiceGlobalState.currency}
-                                        {invoiceData.discountAmmount || 0}</span>
+                                        {invoiceGlobalState.discountAmmount || 0}</span>
                                 </div>
                                 <div className="d-flex flex-row align-items-start justify-content-between mt-2">
               <span className="fw-bold">Tax:
               </span>
                                     <span>
-                <span className="small ">({invoiceData.taxRate || 0}%)</span>
+                <span className="small ">({invoiceGlobalState.taxRate || 0}%)</span>
                                         {invoiceGlobalState.currency}
-                                        {invoiceData.taxAmmount || 0}</span>
+                                        {invoiceGlobalState.taxAmmount || 0}</span>
                                 </div>
                                 <hr/>
                                 <div className="d-flex flex-row align-items-start justify-content-between" style={{
@@ -227,13 +231,13 @@ const InvoiceForm = () => {
               <span className="fw-bold">Total:
               </span>
                                     <span className="fw-bold">{invoiceGlobalState.currency}
-                                        {invoiceData.total || 0}</span>
+                                        {invoiceGlobalState.total || 0}</span>
                                 </div>
                             </Col>
                         </Row>
                         <hr className="my-4"/>
                         <Form.Label className="fw-bold">Notes:</Form.Label>
-                        <Form.Control placeholder="Thanks for your business!" name="notes" value={invoiceData.notes}
+                        <Form.Control placeholder="Thanks for your business!" name="notes" value={invoiceGlobalState.notes}
                                       onChange={(event) => editField(event)} as="textarea" className="my-2"
                                       rows={1}/>
                     </Card>
@@ -241,13 +245,13 @@ const InvoiceForm = () => {
                 <Col md={4} lg={3}>
                     <div className="sticky-top pt-md-3 pt-xl-4">
                         <Button variant="primary" type="submit" className="d-block w-100">Review Invoice</Button>
-                        <InvoiceModal showModal={invoiceData.isOpen} closeModal={closeModal} info={invoiceData}
-                                      items={invoiceData.items} currency={invoiceGlobalState.currency}
-                                      subTotal={invoiceData.subTotal} taxAmmount={invoiceData.taxAmmount}
-                                      discountAmmount={invoiceData.discountAmmount} total={invoiceData.total}/>
+                        <InvoiceModal showModal={invoiceGlobalState.isOpen} closeModal={closeModal} info={invoiceGlobalState}
+                                      items={invoiceGlobalState.items} currency={invoiceGlobalState.currency}
+                                      subTotal={invoiceGlobalState.subTotal} taxAmmount={invoiceGlobalState.taxAmmount}
+                                      discountAmmount={invoiceGlobalState.discountAmmount} total={invoiceGlobalState.total}/>
                         <Form.Group className="mb-3">
                             <Form.Label className="fw-bold">Currency:</Form.Label>
-                            <Form.Select onChange={event => onCurrencyChange(event)}
+                            <Form.Select onChange={event => onCurrencyChange(event)} // redux implemented
                                          className="btn btn-light my-1" aria-label="Change Currency">
                                 <option value="$">USD (United States Dollar)</option>
                                 <option value="₹">INR (Indian National Rupee)</option>
@@ -262,7 +266,7 @@ const InvoiceForm = () => {
                         <Form.Group className="my-3">
                             <Form.Label className="fw-bold">Tax rate:</Form.Label>
                             <InputGroup className="my-1 flex-nowrap">
-                                <Form.Control name="taxRate" type="number" value={invoiceData.taxRate}
+                                <Form.Control name="taxRate" type="number" value={invoiceGlobalState.taxRate}
                                               onChange={(event) => editField(event)} className="bg-white border"
                                               placeholder="0.0" min="0.00" step="0.01" max="100.00"/>
                                 <InputGroup.Text className="bg-light fw-bold text-secondary small">
@@ -273,7 +277,7 @@ const InvoiceForm = () => {
                         <Form.Group className="my-3">
                             <Form.Label className="fw-bold">Discount rate:</Form.Label>
                             <InputGroup className="my-1 flex-nowrap">
-                                <Form.Control name="discountRate" type="number" value={invoiceData.discountRate}
+                                <Form.Control name="discountRate" type="number" value={invoiceGlobalState.discountRate}
                                               onChange={(event) => editField(event)} className="bg-white border"
                                               placeholder="0.0" min="0.00" step="0.01" max="100.00"/>
                                 <InputGroup.Text className="bg-light fw-bold text-secondary small">
