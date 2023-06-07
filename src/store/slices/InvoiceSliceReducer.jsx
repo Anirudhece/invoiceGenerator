@@ -59,14 +59,21 @@ const InvoiceSlice = createSlice({
             const {items} = action.payload;
             state['items']=items;
         },
+        
         rowDeleteReducer:(state,action)=>{
             const {updatedItems}=action.payload;
             state['items']=updatedItems;
         },
+        
+        calculateTotalReducer:(state,action)=>{
+            const {subTotal,taxAmount,discountAmount,total}=action.payload;
+            state.subTotal = subTotal;
+            state.taxAmount = taxAmount;
+            state.discountAmount = discountAmount;
+            state.total = total;
 
-
-
+        }
     }
 })
-export const { add,checkCurrency,editFieldReducer ,rowDeleteReducer,itemizedItemEditReducer ,rowAddReducer} = InvoiceSlice.actions;
+export const { add,checkCurrency,editFieldReducer ,rowDeleteReducer,itemizedItemEditReducer ,rowAddReducer,calculateTotalReducer} = InvoiceSlice.actions;
 export default InvoiceSlice.reducer;
