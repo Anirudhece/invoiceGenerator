@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {  useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -10,49 +10,20 @@ import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch,useSelector} from 'react-redux';
 import {checkCurrency,editFieldReducer,rowAddReducer ,rowDeleteReducer,itemizedItemEditReducer,calculateTotalReducer,modalReducer} from '../store/slices/InvoiceSliceReducer';
-import { current } from '@reduxjs/toolkit';
+import Snackbar from '@mui/material/Snackbar';
+// import Toast from './Toast';
 
 const InvoiceForm = () => {
     const dispatch = useDispatch();
-    const invoiceGlobalState=useSelector((state) => state.InvoiceSlice);
-    
-    const [invoiceData, setInvoiceData] = useState({
-        isOpen: false,
-        currency: '$',
-        currentDate: '',
-        invoiceNumber: 1,
-        dateOfIssue: '',
-        billTo: '',
-        billToEmail: '',
-        billToAddress: '',
-        billFrom: '',
-        billFromEmail: '',
-        billFromAddress: '',
-        notes: '',
-        total: '0.00',
-        subTotal: '0.00',
-        taxRate: '',
-        taxAmount: '0.00',
-        discountRate: '',
-        discountAmount: '0.00',
-        items: [
-            {
-                id: 0,
-                name: '',
-                description: '',
-                price: '1.00',
-                quantity: 1
-            }
-        ]
-    });
+    const {invoiceCount, invoices}=useSelector((state) => state.InvoiceSlice);
+    const invoiceGlobalState = invoices[invoiceCount];
+   
 
     useEffect(() => {
         handleCalculateTotal();
-    }, [invoiceGlobalState.items,
+    }, [invoiceGlobalState.items, // state['invoices']['invoiceCount'].items
         invoiceGlobalState.taxRate,
         invoiceGlobalState.discountRate,]);
-
-
 
     const handleAddEvent = () => {
         const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
@@ -244,7 +215,14 @@ const InvoiceForm = () => {
                 </Col>
                 <Col md={4} lg={3}>
                     <div className="sticky-top pt-md-3 pt-xl-4">
+
                         <Button variant="primary" type="submit" className="d-block w-100">Review Invoice</Button>
+
+                        <hr className="my-4"/>
+                        
+                        <Button variant="success" type="submit" className="d-block w-100">save Invoice</Button>
+                        
+
                         <InvoiceModal showModal={invoiceGlobalState.isOpen} closeModal={closeModal} info={invoiceGlobalState}
                                       items={invoiceGlobalState.items} currency={invoiceGlobalState.currency}
                                       subTotal={invoiceGlobalState.subTotal} taxAmmount={invoiceGlobalState.taxAmmount}
