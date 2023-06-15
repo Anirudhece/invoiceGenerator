@@ -76,12 +76,11 @@ const InvoiceSlice = createSlice({
         modalReducer: (state, action) => {
             state.invoices[state.invoiceCount].isOpen = action.payload.isOpen;
         },
-        // invoiceCountIncrementReducer:(state,action)=>{
-        //     state.invoiceCount++;
-        // }
+        invoiceCountIncrementReducer: (state, action) => {
+            state.invoiceCount++;
+        }
     }
 })
-export const { checkCurrency, editFieldReducer, rowDeleteReducer, itemizedItemEditReducer, rowAddReducer, calculateTotalReducer, modalReducer
-    // , invoiceCountIncrementReducer
+export const { checkCurrency, editFieldReducer, rowDeleteReducer, itemizedItemEditReducer, rowAddReducer, calculateTotalReducer, modalReducer, invoiceCountIncrementReducer
 } = InvoiceSlice.actions;
 export default InvoiceSlice.reducer;
