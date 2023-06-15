@@ -241,15 +241,9 @@ const InvoiceForm = () => {
                                     })
 
                                     // dispatch(invoiceCountIncrementReducer())
-                                    // dispatch(toastReducer(true));
-                                    // toast("Invoice saved successfully", {
-                                    //     type: "success",
-                                    // });
                                 }}
                             >Save Invoice
                             </Button>
-
-                            {/* <ToastContainer /> */}
 
 
                             <InvoiceModal showModal={invoiceGlobalState.isOpen} closeModal={closeModal} info={invoiceGlobalState}
