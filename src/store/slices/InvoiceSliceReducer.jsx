@@ -33,13 +33,12 @@ const InvoiceSlice = createSlice({
             ]
         }],
         invoiceCount: 0,
-        // displayToast:false
     },
     reducers: {
-        add: (state, action) => {
-            const { key, value } = action.payload;
-            state.invoices[state.invoiceCount][key] = value;
-        },
+        // add: (state, action) => {
+        //     const { key, value } = action.payload;
+        //     state.invoices[state.invoiceCount][key] = value;
+        // },
         checkCurrency: (state, action) => {
             const { key, value } = action.payload;
             state.invoices[state.invoiceCount][key] = value;
@@ -76,8 +75,13 @@ const InvoiceSlice = createSlice({
 
         modalReducer: (state, action) => {
             state.invoices[state.invoiceCount].isOpen = action.payload.isOpen;
-        }
+        },
+        // invoiceCountIncrementReducer:(state,action)=>{
+        //     state.invoiceCount++;
+        // }
     }
 })
-export const { add, checkCurrency, editFieldReducer, rowDeleteReducer, itemizedItemEditReducer, rowAddReducer, calculateTotalReducer, modalReducer } = InvoiceSlice.actions;
+export const { checkCurrency, editFieldReducer, rowDeleteReducer, itemizedItemEditReducer, rowAddReducer, calculateTotalReducer, modalReducer
+    // , invoiceCountIncrementReducer
+} = InvoiceSlice.actions;
 export default InvoiceSlice.reducer;

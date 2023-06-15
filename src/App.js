@@ -6,6 +6,7 @@ import InvoiceForm from "./components/InvoiceForm";
 import Bills from "./components/Bills";
 import Navbar from "./components/Navbar";
 import { Routes, Route } from "react-router-dom";
+import Toast from "./components/Toast";
 
 class App extends Component {
   render() {
@@ -20,6 +21,7 @@ class App extends Component {
             <Route path="/" element={<Bills />}></Route>
             <Route path="/InvoiceForm" element={<InvoiceForm />}></Route>
           </Routes>
+          {/* <Toast /> */}
         </Container>
       </div>
     );
