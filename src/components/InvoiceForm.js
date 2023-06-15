@@ -229,6 +229,7 @@ const InvoiceForm = () => {
                                 className="d-block w-100"
                                 onClick={(e) => {
                                     e.preventDefault();
+                                    dispatch(invoiceCountIncrementReducer())
                                     toast.success("INVOICE SAVED", {
                                         position: "bottom-center",
                                         autoClose: 2000,
@@ -239,8 +240,6 @@ const InvoiceForm = () => {
                                         progress: undefined,
                                         theme: "colored",
                                     })
-
-                                    // dispatch(invoiceCountIncrementReducer())
                                 }}
                             >Save Invoice
                             </Button>
