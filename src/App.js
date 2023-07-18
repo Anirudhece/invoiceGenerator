@@ -6,11 +6,12 @@ import InvoiceForm from "./components/InvoiceForm";
 import Bills from "./components/Bills";
 import Navbar from "./components/Navbar";
 import { Routes, Route } from "react-router-dom";
-
+import { ToastContainer } from 'react-toastify';
 
 class App extends Component {
   render() {
     return (
+    
       <div
         className="App d-flex flex-column 
       align-items-center justify-content-center w-100"
@@ -22,6 +23,7 @@ class App extends Component {
             <Route path="/InvoiceForm" element={<InvoiceForm />}></Route>
           </Routes>
         </Container>
+        <ToastContainer />
       </div>
     );
   }

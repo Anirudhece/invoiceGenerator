@@ -9,8 +9,6 @@ import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { useDispatch, useSelector } from 'react-redux';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { checkCurrency, editFieldReducer, rowAddReducer, rowDeleteReducer, itemizedItemEditReducer, calculateTotalReducer, modalReducer, invoiceCountIncrementReducer } from '../store/slices/InvoiceSliceReducer';
 
 const InvoiceForm = () => {
@@ -225,7 +223,7 @@ const InvoiceForm = () => {
                             <hr className="my-4" />
 
                             {/* YAHA ROUTE LAGANA CHAHIA TO HOME */}
-                            <Button variant="success" type="submit"
+                            {/* <Button variant="success" type="submit"
                                 className="d-block w-100"
                                 onClick={(e) => {
                                     e.preventDefault();
@@ -242,7 +240,7 @@ const InvoiceForm = () => {
                                     })
                                 }}
                             >Save Invoice
-                            </Button>
+                            </Button> */}
 
 
                             <InvoiceModal showModal={invoiceGlobalState.isOpen} closeModal={closeModal} info={invoiceGlobalState}
@@ -289,7 +287,7 @@ const InvoiceForm = () => {
                     </Col>
                 </Row>
             </Form>
-            <ToastContainer />
+            {/* <ToastContainer /> */}
         </>
     )
 }
