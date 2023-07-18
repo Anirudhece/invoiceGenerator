@@ -13,8 +13,10 @@ import { checkCurrency, editFieldReducer, rowAddReducer, rowDeleteReducer, itemi
 
 const InvoiceForm = () => {
     const dispatch = useDispatch();
-    const { invoiceCount, invoices } = useSelector((state) => state.InvoiceSlice);
+    const { invoiceCount, invoices, displayToast } = useSelector((state) => state.InvoiceSlice);
     const invoiceGlobalState = invoices[invoiceCount];
+
+
 
     useEffect(() => {
         handleCalculateTotal();
@@ -226,7 +228,16 @@ const InvoiceForm = () => {
                                 onClick={(e) => {
                                     e.preventDefault();
                                     dispatch(invoiceCountIncrementReducer())
-                                    
+                                    toast.success("INVOICE SAVED", {
+                                        position: "bottom-center",
+                                        autoClose: 2000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: "colored",
+                                    })
                                 }}
                             >Save Invoice
                             </Button> */}
