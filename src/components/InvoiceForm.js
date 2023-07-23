@@ -21,6 +21,7 @@ import {
 } from "../store/slices/InvoiceSliceReducer";
 
 const InvoiceForm = () => {
+  
   const dispatch = useDispatch();
   const { invoiceCount, invoices } = useSelector((state) => state.InvoiceSlice);
   const invoiceGlobalState = invoices[invoiceCount];
@@ -370,14 +371,11 @@ const InvoiceForm = () => {
                   </InputGroup.Text>
                 </InputGroup>
               </Form.Group>
-              .
             </div>
           </Col>
         </Row>
       </Form>
-      {/* <ToastContainer /> */}
     </>
   );
 };
-
 export default InvoiceForm;
