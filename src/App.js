@@ -17,7 +17,7 @@ class App extends Component {
       align-items-center justify-content-center w-100"
       >
         <Container>
-          {/* <Navbar /> */}
+          <Navbar />
           <Routes>
             <Route path="/" element={<Bills />}></Route>
             <Route path="/InvoiceForm" element={<InvoiceForm />}></Route>

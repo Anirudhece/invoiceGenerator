@@ -75,22 +75,50 @@ const InvoiceSlice = createSlice({
     },
 
     saveInvoiceReducer: (state, action) => {
-      // pass id
-      state.invoices[state.invoiceCount]["id"] = Date.now();
+       // Set a new ID for the saved invoice
+       state.invoices[state.invoiceCount].id = Date.now(); // invoice number ko hi id bnade kya??
 
-      const currentInvoice = state.invoices[state.invoiceCount];
-
-      // copied array push
-      state.invoices.push(currentInvoice);
-
-      state.invoiceCount++;
-
-      //yaha pr jub bhi hum push krte ha code ko initial state ki bhi vlue hange ho jati ha
-
-      // state.invoices[state.invoiceCount] = { ...state.invoices[0] };
+       // Create a new empty invoice object
+       const newEmptyInvoice = {
+         id: "",
+         isOpen: false,
+         currency: "$",
+         currentDate: "",
+         invoiceNumber: state.invoices[state.invoiceCount].invoiceNumber+1 ,//taki new invoice number bn sake. 
+         dateOfIssue: "",
+         billTo: "",
+         billToEmail: "",
+         billToAddress: "",
+         billFrom: "",
+         billFromEmail: "",
+         billFromAddress: "",
+         notes: "",
+         total: "0.00",
+         subTotal: "0.00",
+         taxRate: "",
+         taxAmount: "0.00",
+         discountRate: "",
+         discountAmount: "0.00",
+         items: [
+           {
+             id: 0,
+             name: "",
+             description: "",
+             price: "1.00",
+             quantity: 1,
+           },
+         ],
+       };
+ 
+       // empty ko push krdia
+       state.invoices.push(newEmptyInvoice);
+ 
+       // Increment the invoice count for the next invoice
+       state.invoiceCount++;
+     },
     },
   },
-});
+);
 export const {
   checkCurrency,
   editFieldReducer,
