@@ -40,7 +40,8 @@ const GenerateInvoice = (props) => {
   };
 
   const saveInvoice = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    // e.stopPropagation();
     toast.success("INVOICE SAVED SUCCESSFULLY", {
       position: "top-center",
       autoClose: 2000,
@@ -176,8 +177,9 @@ const GenerateInvoice = (props) => {
           <Row>
             <Col md={12}>
               <Link style={{ textDecoration: "none" }} to="/">
-                <Button variant="success" className="d-block w-100" onClick={(e) => saveInvoice(e)
-                }>
+                <Button variant="success" className="d-block w-100"
+                  onClick={(e) => saveInvoice(e)}
+                >
                   <BiSave style={{ width: '15px', height: '15px', marginTop: '-3px' }} className="me-2" />
                   SAVE INVOICE
                 </Button>
