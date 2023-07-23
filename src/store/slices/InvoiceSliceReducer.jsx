@@ -85,7 +85,9 @@ const InvoiceSlice = createSlice({
 
       state.invoiceCount++;
 
-      state.invoices[state.invoiceCount] = { ...state.invoices[0] };
+      //yaha pr jub bhi hum push krte ha code ko initial state ki bhi vlue hange ho jati ha
+
+      // state.invoices[state.invoiceCount] = { ...state.invoices[0] };
     },
   },
 });
