@@ -13,7 +13,7 @@ import { checkCurrency, editFieldReducer, rowAddReducer, rowDeleteReducer, itemi
 
 const InvoiceForm = () => {
     const dispatch = useDispatch();
-    const { invoiceCount, invoices, displayToast } = useSelector((state) => state.InvoiceSlice);
+    const { invoiceCount, invoices } = useSelector((state) => state.InvoiceSlice);
     const invoiceGlobalState = invoices[invoiceCount];
 
 

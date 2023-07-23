@@ -8,12 +8,20 @@ import Modal from 'react-bootstrap/Modal';
 import { BiPaperPlane, BiCloudDownload, BiSave } from "react-icons/bi";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// import { useDispatch,useSelector } from 'react-redux';
-// import {}
+import { useDispatch, useSelector } from 'react-redux';
+import { saveInvoiceReducer } from '../store/slices/InvoiceSliceReducer';
+import { Link } from "react-router-dom";
+
+
 
 const GenerateInvoice = (props) => {
+
+  const dispatch = useDispatch();
+  const { invoiceCount, invoices } = useSelector((state) => state.InvoiceSlice);
+  const invoiceGlobalState = invoices[invoiceCount];
+
   const handleGenerateInvoice = () => {
     html2canvas(document.querySelector("#invoiceCapture")).then((canvas) => {
       const imgData = canvas.toDataURL('image/png', 1.0);
@@ -30,6 +38,21 @@ const GenerateInvoice = (props) => {
       pdf.save('invoice-001.pdf');
     });
   };
+
+  const saveInvoice = (e) => {
+    e.preventDefault();
+    toast.success("INVOICE SAVED SUCCESSFULLY", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+    dispatch(saveInvoiceReducer());
+  }
 
   return (
     <div>
@@ -152,28 +175,19 @@ const GenerateInvoice = (props) => {
         <div className="pb-4 px-4  ">
           <Row>
             <Col md={12}>
-              <Button variant="success" className="d-block w-100" onClick={(e)=>{
-                e.preventDefault();
-                toast.success("INVOICE SAVED", {
-                  position: "bottom-center",
-                  autoClose: 2000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  theme: "colored",
-              })
-              }}>
-                <BiSave style={{ width: '15px', height: '15px', marginTop: '-3px' }} className="me-2" />
-                SAVE INVOICE
-              </Button>
+              <Link style={{ textDecoration: "none" }} to="/">
+                <Button variant="success" className="d-block w-100" onClick={(e) => saveInvoice(e)
+                }>
+                  <BiSave style={{ width: '15px', height: '15px', marginTop: '-3px' }} className="me-2" />
+                  SAVE INVOICE
+                </Button>
+              </Link>
             </Col>
           </Row>
         </div>
       </Modal>
       <hr className="mt-4 mb-3" />
-      
+
     </div>
   );
 };
