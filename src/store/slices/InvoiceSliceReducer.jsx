@@ -74,51 +74,59 @@ const InvoiceSlice = createSlice({
       state.invoices[state.invoiceCount].isOpen = action.payload.isOpen;
     },
 
-    saveInvoiceReducer: (state, action) => {
-       // Set a new ID for the saved invoice
-       state.invoices[state.invoiceCount].id = Date.now(); // invoice number ko hi id bnade kya??
+    deleteInvoiceReducer: (state, action) => {
+      const { invoiceId } = action.payload;
+      const indexToDelete = state.invoices.findIndex(
+        (invoice) => invoice.id === invoiceId
+      );
+      state.invoices.splice(indexToDelete, 1);
+      state.invoiceCount--;
+    },
 
-       // Create a new empty invoice object
-       const newEmptyInvoice = {
-         id: "",
-         isOpen: false,
-         currency: "$",
-         currentDate: "",
-         invoiceNumber: state.invoices[state.invoiceCount].invoiceNumber+1 ,//taki new invoice number bn sake. 
-         dateOfIssue: "",
-         billTo: "",
-         billToEmail: "",
-         billToAddress: "",
-         billFrom: "",
-         billFromEmail: "",
-         billFromAddress: "",
-         notes: "",
-         total: "0.00",
-         subTotal: "0.00",
-         taxRate: "",
-         taxAmount: "0.00",
-         discountRate: "",
-         discountAmount: "0.00",
-         items: [
-           {
-             id: 0,
-             name: "",
-             description: "",
-             price: "1.00",
-             quantity: 1,
-           },
-         ],
-       };
- 
-       // empty ko push krdia
-       state.invoices.push(newEmptyInvoice);
- 
-       // Increment the invoice count for the next invoice
-       state.invoiceCount++;
-     },
+    saveInvoiceReducer: (state, action) => {
+      // Set a new ID for the saved invoice
+      state.invoices[state.invoiceCount].id = Date.now(); // invoice number ko hi id bnade kya??
+
+      // Create a new empty invoice object
+      const newEmptyInvoice = {
+        id: "",
+        isOpen: false,
+        currency: "$",
+        currentDate: "",
+        invoiceNumber: state.invoices[state.invoiceCount].invoiceNumber + 1, //taki new invoice number bn sake.
+        dateOfIssue: "",
+        billTo: "",
+        billToEmail: "",
+        billToAddress: "",
+        billFrom: "",
+        billFromEmail: "",
+        billFromAddress: "",
+        notes: "",
+        total: "0.00",
+        subTotal: "0.00",
+        taxRate: "",
+        taxAmount: "0.00",
+        discountRate: "",
+        discountAmount: "0.00",
+        items: [
+          {
+            id: 0,
+            name: "",
+            description: "",
+            price: "1.00",
+            quantity: 1,
+          },
+        ],
+      };
+
+      // empty ko push krdia
+      state.invoices.push(newEmptyInvoice);
+
+      // Increment the invoice count for the next invoice
+      state.invoiceCount++;
     },
   },
-);
+});
 export const {
   checkCurrency,
   editFieldReducer,
@@ -126,8 +134,8 @@ export const {
   itemizedItemEditReducer,
   rowAddReducer,
   calculateTotalReducer,
-  modalReducer,
-  saveInvoiceReducer
+  modalReducer,deleteInvoiceReducer,
+  saveInvoiceReducer,
 } = InvoiceSlice.actions;
 
 export default InvoiceSlice.reducer;
