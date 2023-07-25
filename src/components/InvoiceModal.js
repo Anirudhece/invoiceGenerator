@@ -174,7 +174,7 @@ const GenerateInvoice = (props) => {
           </Row>
         </div>
         <div className="pb-4 px-4  ">
-          <Row>
+          {props.showSavebutton && (<Row>
             <Col md={12}>
               <Link style={{ textDecoration: "none" }} to="/">
                 <Button variant="success" className="d-block w-100"
@@ -185,7 +185,7 @@ const GenerateInvoice = (props) => {
                 </Button>
               </Link>
             </Col>
-          </Row>
+          </Row>)}
         </div>
       </Modal>
       <hr className="mt-4 mb-3" />

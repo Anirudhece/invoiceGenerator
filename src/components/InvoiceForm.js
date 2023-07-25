@@ -17,7 +17,6 @@ import {
   itemizedItemEditReducer,
   calculateTotalReducer,
   modalReducer,
-  invoiceCountIncrementReducer,
 } from "../store/slices/InvoiceSliceReducer";
 
 const InvoiceForm = () => {
@@ -313,6 +312,7 @@ const InvoiceForm = () => {
                 subTotal={invoiceGlobalState.subTotal}
                 taxAmmount={invoiceGlobalState.taxAmmount}
                 discountAmmount={invoiceGlobalState.discountAmmount}
+                showSavebutton={true}
                 total={invoiceGlobalState.total}
               />
               <Form.Group className="mb-3">

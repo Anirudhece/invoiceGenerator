@@ -134,7 +134,8 @@ export const {
   itemizedItemEditReducer,
   rowAddReducer,
   calculateTotalReducer,
-  modalReducer,deleteInvoiceReducer,
+  modalReducer,
+  deleteInvoiceReducer,
   saveInvoiceReducer,
 } = InvoiceSlice.actions;
 
