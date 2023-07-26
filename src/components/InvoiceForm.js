@@ -19,10 +19,14 @@ import {
   modalReducer,
 } from "../store/slices/InvoiceSliceReducer";
 
-const InvoiceForm = () => {
+const InvoiceForm = (props) => {
   const dispatch = useDispatch();
   const { invoiceCount, invoices } = useSelector((state) => state.InvoiceSlice);
-  const invoiceGlobalState = invoices[invoiceCount];
+
+  console.log(props);
+  const invoiceGlobalState = props.index
+    ? invoices.find((ele) => ele.id === props.index)
+    : invoices[invoiceCount];
 
   useEffect(() => {
     handleCalculateTotal();
