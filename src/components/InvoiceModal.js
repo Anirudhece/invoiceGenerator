@@ -20,7 +20,7 @@ const GenerateInvoice = (props) => {
 
   const dispatch = useDispatch();
   const { invoiceCount, invoices } = useSelector((state) => state.InvoiceSlice);
-  const invoiceGlobalState = invoices[invoiceCount];
+  // const invoiceGlobalState = invoices[invoiceCount];
 
   const handleGenerateInvoice = () => {
     html2canvas(document.querySelector("#invoiceCapture")).then((canvas) => {
@@ -40,8 +40,6 @@ const GenerateInvoice = (props) => {
   };
 
   const saveInvoice = (e) => {
-    // e.preventDefault();
-    // e.stopPropagation();
     toast.success("INVOICE SAVED SUCCESSFULLY", {
       position: "top-center",
       autoClose: 2000,
@@ -53,6 +51,7 @@ const GenerateInvoice = (props) => {
       theme: "colored",
     });
     dispatch(saveInvoiceReducer());
+    props.closeModal();
   }
 
   return (
