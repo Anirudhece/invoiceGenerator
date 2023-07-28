@@ -11,7 +11,7 @@ import jsPDF from 'jspdf';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveInvoiceReducer } from '../store/slices/InvoiceSliceReducer';
+import { saveInvoiceReducer, editInvoiceReducer,modalReducer } from '../store/slices/InvoiceSliceReducer';
 import { Link } from "react-router-dom";
 
 
@@ -50,7 +50,9 @@ const GenerateInvoice = (props) => {
       progress: undefined,
       theme: "colored",
     });
+    dispatch(modalReducer({ isOpen: false }));
     dispatch(saveInvoiceReducer());
+    dispatch(editInvoiceReducer(null));
     props.closeModal();
   }
 
