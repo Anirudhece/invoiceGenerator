@@ -35,6 +35,7 @@ const InvoiceSlice = createSlice({
       },
     ],
     invoiceCount: 0,
+    EditThisInvoice: null
   },
 
   reducers: {
@@ -81,6 +82,11 @@ const InvoiceSlice = createSlice({
       );
       state.invoices.splice(indexToDelete, 1);
       state.invoiceCount--;
+    },
+
+    editInvoiceReducer:(state,action)=>{
+      // const {invoiceId}=action.payload;
+      state.EditThisInvoice=action.payload;
     },
 
     saveInvoiceReducer: (state, action) => {
@@ -137,6 +143,7 @@ export const {
   modalReducer,
   deleteInvoiceReducer,
   saveInvoiceReducer,
+  editInvoiceReducer
 } = InvoiceSlice.actions;
 
 export default InvoiceSlice.reducer;
