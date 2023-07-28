@@ -4,32 +4,34 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import WifiProtectedSetupIcon from "@mui/icons-material/WifiProtectedSetup";
 import Divider from "@mui/material/Divider";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteInvoiceReducer,
-  modalReducer,
+  editInvoiceReducer,
 } from "../store/slices/InvoiceSliceReducer";
 import InvoiceModal from "./InvoiceModal";
-
+import InvoiceForm from "./InvoiceForm";
+import { Link } from "react-router-dom";
 const Bills = () => {
   const dispatch = useDispatch();
-  const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
   const { invoices } = useSelector((state) => state.InvoiceSlice);
 
-  const [isHovered, setIsHovered] = useState(false);
+  const [selectedViewInvoiceId, setSelectedViewInvoiceId] = useState(null);
+
+  const [selectedEditInvoiceId, setSelectedEditInvoiceId] = useState(null);
 
   const deleteInvoice = (invoiceId) => {
     dispatch(deleteInvoiceReducer({ invoiceId }));
   };
 
-  // const openModal = (invoice) => {
-  //   dispatch(modalReducer({ isOpen: true }));
-  //   setSelectedInvoice(invoice); // Set the selected invoice in the local state
-  // };
-
   const handleViewInvoice = (invoiceId) => {
-    setSelectedInvoiceId(invoiceId);
+    setSelectedViewInvoiceId(invoiceId);
+  };
+
+  const handleEditInvoice = (invoiceId) => {
+    // dispatch(editInvoiceReducer(invoiceId));
+    setSelectedEditInvoiceId(invoiceId);
   };
 
   return (
@@ -93,14 +95,21 @@ const Bills = () => {
                         />
                       </IconButton>
                     </Tooltip>
+
+                    {/* <Link style={{ textDecoration: "none" }} to="/InvoiceForm"> */}
                     <Tooltip title="edit">
                       <IconButton aria-label="edit" sx={{ marginRight: "5px" }}>
                         <WifiProtectedSetupIcon
                           fontSize="large"
                           color="secondary"
+                          onClick={() => {
+                            handleEditInvoice(ele.id);
+                          }}
                         />
                       </IconButton>
                     </Tooltip>
+                    {/* </Link> */}
+
                     <Typography textAlign="center" sx={{ marginRight: "15px" }}>
                       {ele.total}
                     </Typography>
@@ -114,32 +123,35 @@ const Bills = () => {
         </>
       </Container>
 
-      {selectedInvoiceId && (
+      {selectedEditInvoiceId && <InvoiceForm id={selectedEditInvoiceId} />}
+
+      {selectedViewInvoiceId && (
         <InvoiceModal
           showModal={true}
-          closeModal={() => setSelectedInvoiceId(null)}
-          info={invoices.find((ele) => ele.id === selectedInvoiceId)}
+          closeModal={() => setSelectedViewInvoiceId(null)}
+          info={invoices.find((ele) => ele.id === selectedViewInvoiceId)}
           items={
-            invoices.find((ele) => ele.id === selectedInvoiceId)?.items || []
+            invoices.find((ele) => ele.id === selectedViewInvoiceId)?.items ||
+            []
           }
           currency={
-            invoices.find((ele) => ele.id === selectedInvoiceId)?.currency ||
-            "$"
+            invoices.find((ele) => ele.id === selectedViewInvoiceId)
+              ?.currency || "$"
           }
           subTotal={
-            invoices.find((ele) => ele.id === selectedInvoiceId)?.subTotal ||
-            "0.00"
+            invoices.find((ele) => ele.id === selectedViewInvoiceId)
+              ?.subTotal || "0.00"
           }
           taxAmmount={
-            invoices.find((ele) => ele.id === selectedInvoiceId)?.taxAmount ||
-            "0.00"
+            invoices.find((ele) => ele.id === selectedViewInvoiceId)
+              ?.taxAmount || "0.00"
           }
           discountAmmount={
-            invoices.find((ele) => ele.id === selectedInvoiceId)
+            invoices.find((ele) => ele.id === selectedViewInvoiceId)
               ?.discountAmount || "0.00"
           }
           total={
-            invoices.find((ele) => ele.id === selectedInvoiceId)?.total ||
+            invoices.find((ele) => ele.id === selectedViewInvoiceId)?.total ||
             "0.00"
           }
           showSavebutton={false}

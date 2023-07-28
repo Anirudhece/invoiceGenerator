@@ -21,13 +21,14 @@ import {
 
 const InvoiceForm = (props) => {
   const dispatch = useDispatch();
-  const { invoiceCount, invoices } = useSelector((state) => state.InvoiceSlice);
-
-  console.log(props);
-  const invoiceGlobalState = props.index
-    ? invoices.find((ele) => ele.id === props.index)
-    : invoices[invoiceCount];
-
+  const { invoiceCount, invoices, EditThisInvoice } = useSelector(
+    (state) => state.InvoiceSlice
+  );
+  // const invoiceGlobalState = EditThisInvoice
+  const invoiceGlobalState=props.id? invoices.find((ele)=>ele.id===props.id)
+  : invoices[invoiceCount] ;
+  
+  // ? invoiceCount.find((ele) => ele.id === EditThisInvoice)
   useEffect(() => {
     handleCalculateTotal();
   }, [
@@ -80,6 +81,10 @@ const InvoiceForm = (props) => {
       }
       return item;
     });
+
+    // useEffect(() => {
+    //   EditThisInvoice && handleCalculateTotal();
+    // }, [EditThisInvoice]);
 
     handleCalculateTotal();
 
