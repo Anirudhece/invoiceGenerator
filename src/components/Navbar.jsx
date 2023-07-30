@@ -1,9 +1,22 @@
-import React from "react";
+import React, {useEffect} from "react";
+import { useNavigate , useLocation} from "react-router-dom";
 import { Box, Typography, Tooltip } from "@mui/material";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import { Link } from "react-router-dom";
+import {updateInvoiceStateFromStorage} from "../store/slices/InvoiceSliceReducer";
+import {useDispatch} from "react-redux";
 
 const Navbar = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.pathname.indexOf('invoice') === -1) {
+            navigate("/invoice");
+        }
+    }, [navigate]);
+
+
   return (
     <>
       <Box
@@ -27,7 +40,7 @@ const Navbar = () => {
           </Link>
         </Box>
         <Box>
-          <Link style={{ textDecoration: "none" }} to="/InvoiceForm">
+          <Link style={{ textDecoration: "none" }} to="/invoice/create">
             <Tooltip title="create">
               <ReceiptIcon />
             </Tooltip>

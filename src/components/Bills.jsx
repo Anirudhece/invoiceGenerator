@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Container, Typography, Box, IconButton, Tooltip } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -7,19 +7,19 @@ import Divider from "@mui/material/Divider";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteInvoiceReducer,
+  updateInvoiceStateFromStorage,
   editInvoiceReducer,
 } from "../store/slices/InvoiceSliceReducer";
 import InvoiceModal from "./InvoiceModal";
 import InvoiceForm from "./InvoiceForm";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 const Bills = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const { invoices } = useSelector((state) => state.InvoiceSlice);
 
   const [selectedViewInvoiceId, setSelectedViewInvoiceId] = useState(null);
-
-  const [selectedEditInvoiceId, setSelectedEditInvoiceId] = useState(null);
 
   const deleteInvoice = (invoiceId) => {
     dispatch(deleteInvoiceReducer({ invoiceId }));
@@ -30,8 +30,7 @@ const Bills = () => {
   };
 
   const handleEditInvoice = (invoiceId) => {
-    // dispatch(editInvoiceReducer(invoiceId));
-    setSelectedEditInvoiceId(invoiceId);
+    navigate(`/invoice/edit/${invoiceId}`);
   };
 
   return (
@@ -122,9 +121,6 @@ const Bills = () => {
           })}
         </>
       </Container>
-
-      {selectedEditInvoiceId && <InvoiceForm id={selectedEditInvoiceId} />}
-
       {selectedViewInvoiceId && (
         <InvoiceModal
           showModal={true}

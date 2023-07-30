@@ -9,6 +9,8 @@ import InvoiceItem from "./InvoiceItem";
 import InvoiceModal from "./InvoiceModal";
 import InputGroup from "react-bootstrap/InputGroup";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from 'react-router-dom';
+import {initialInvoice} from "../store/slices/constant"
 import {
   checkCurrency,
   editFieldReducer,
@@ -21,16 +23,22 @@ import {
 
 const InvoiceForm = (props) => {
   const dispatch = useDispatch();
-  const { invoiceCount, invoices, EditThisInvoice } = useSelector(
+  const { id:invoiceFormId } = useParams();
+  const { invoiceCount, invoices } = useSelector(
     (state) => state.InvoiceSlice
   );
   // const invoiceGlobalState = EditThisInvoice
-  const invoiceGlobalState=props.id? invoices.find((ele)=>ele.id===props.id)
-  : invoices[invoiceCount] ;
-  
+  let invoiceGlobalState= initialInvoice;
+
+  if(invoiceFormId){
+    invoiceGlobalState = invoices.find((ele)=> ele.id.toString() === invoiceFormId) || initialInvoice;
+  }else {
+    invoiceGlobalState = invoices[invoiceCount] ? invoices[invoiceCount] : initialInvoice;
+  }
+
   // ? invoiceCount.find((ele) => ele.id === EditThisInvoice)
   useEffect(() => {
-    handleCalculateTotal();
+    invoiceGlobalState.items?.length && invoiceGlobalState.taxRate && invoiceGlobalState.discountRate && handleCalculateTotal();
   }, [
     invoiceGlobalState.items,
     invoiceGlobalState.taxRate,
@@ -47,7 +55,7 @@ const InvoiceForm = (props) => {
       quantity: 1,
     };
 
-    dispatch(rowAddReducer({ items: [...invoiceGlobalState.items, newItem] }));
+    dispatch(rowAddReducer({ items: [...invoiceGlobalState.items, newItem],invoiceFormId }));
   };
 
   const handleCalculateTotal = () => {
@@ -69,6 +77,7 @@ const InvoiceForm = (props) => {
         taxAmount,
         discountAmount,
         total,
+        invoiceFormId,
       })
     );
   };
@@ -91,6 +100,7 @@ const InvoiceForm = (props) => {
     dispatch(
       itemizedItemEditReducer({
         updatedItems,
+        invoiceFormId,
       })
     );
   };
@@ -99,29 +109,29 @@ const InvoiceForm = (props) => {
     const updatedItems = invoiceGlobalState.items.filter(
       (i) => i.id !== item.id
     );
-    dispatch(rowDeleteReducer({ updatedItems }));
+    dispatch(rowDeleteReducer({ updatedItems,invoiceFormId }));
   };
 
   const editField = (event) => {
     const { name, value } = event.target;
     handleCalculateTotal();
-    dispatch(editFieldReducer({ name, value }));
+    dispatch(editFieldReducer({ name, value,invoiceFormId }));
   };
 
   const onCurrencyChange = (event) => {
     const { value } = event.target;
 
-    dispatch(checkCurrency({ key: "currency", value }));
+    dispatch(checkCurrency({ key: "currency", value,invoiceFormId }));
   };
 
   const openModal = (event) => {
     event.preventDefault();
     handleCalculateTotal();
-    dispatch(modalReducer({ isOpen: true }));
+    dispatch(modalReducer({ isOpen: true,invoiceFormId }));
   };
 
   const closeModal = () => {
-    dispatch(modalReducer({ isOpen: false }));
+    dispatch(modalReducer({ isOpen: false,invoiceFormId }));
   };
 
   return (
@@ -309,12 +319,13 @@ const InvoiceForm = (props) => {
           <Col md={4} lg={3}>
             <div className="sticky-top pt-md-3 pt-xl-4">
               <Button variant="primary" type="submit" className="d-block w-100">
-                Review Invoice
+                {invoiceFormId ? `Update Invoice` : `Create Invoice`}
               </Button>
               <hr className="my-4" />
               <InvoiceModal
                 showModal={invoiceGlobalState.isOpen}
                 closeModal={closeModal}
+                invoiceFormId={invoiceFormId}
                 info={invoiceGlobalState}
                 items={invoiceGlobalState.items}
                 currency={invoiceGlobalState.currency}
