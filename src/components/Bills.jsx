@@ -15,7 +15,7 @@ import InvoiceForm from "./InvoiceForm";
 import {Link, useNavigate} from "react-router-dom";
 const Bills = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate = useNavigate();// to ask
   const [isHovered, setIsHovered] = useState(false);
   const { invoices } = useSelector((state) => state.InvoiceSlice);
 
